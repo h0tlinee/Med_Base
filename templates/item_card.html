@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+
+
+<body>
+<div class="item_card">
+    <img src="{{ url_for('static', filename='pic1.jpg') }}" height="200px" width="200px" id="item_image"/>
+    <div class="item_card_text">
+        
+        <h1 id="item_id">Код товара:{{item_info.code}}</h1>
+        <h1 id="item_price">Цена товара:{{item_info.price}}</h1>
+        <h1 id="item_description">Описание товара:{{item_info.description}}</h1>
+        <h1 id="item_sctructure">Состав товара:{{item_info.structure}}</h1>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+body {
+    font-family: 'IBM Plex Serif', serif;
+    color: black;
+    padding: 30px 15px;
+    max-width: 1330px;
+    margin: 0 auto;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: red;
+}
+
+div#catalog_container {
+    border: 4px solid black;
+    background-color: antiquewhite;
+    height: 1000px;
+}
+
+.catalog_window {
+    border: 2px solid black;
+    margin: 10%;
+    max-height: 600px;
+    overflow: scroll;
+}
+
+h1#catalog_title {
+    text-align: center;
+}
+
+.item_card {
+    padding: 15px;
+    border: 2px solid black;
+
+}
+
+.item_image {
+    display: inline-block
+}
+
+.item_card_text {
+
+
+    max-height: 200px;
+    max-width: 200px;
+    position: relative;
+    display: inline-block;
+    font-size: 10px;
+    left: 50px;
+    text-align: left;
+}
