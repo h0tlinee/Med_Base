@@ -9,13 +9,22 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
     <title>Попов Семён Николаевич</title>
 </head>
+<body>
+
+       {% if current_user.is_authenticated %}
+       <div>{{current_user}}</div>>
+        {% include 'header_auth_user.htm' %}
+  {% else %}
+    {% include 'header_non_auth.htm' %}
+  {% endif %}
 
 {%block content%}
 {%endblock%}
 
 <footer>
     <div class="footer_wrap">
-     © lorem ispum lorem ispum 2023 Powerd By lorem ispum
+     © коммерческая тайна сохранена. Будьте здоровы!
     </div>
 </footer>
+</body>
 </html>

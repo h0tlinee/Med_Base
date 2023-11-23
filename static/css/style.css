@@ -1,0 +1,51 @@
+body{
+    font-family: 'IBM Plex Serif', serif;
+    color: black;
+    padding: 30px 15px;
+    max-width:1330px;
+    margin:0 auto;
+    border:2px solid black;
+    border-radius: 10px;
+
+}
+/*стили шапки незарегистрированного пользователя*/
+header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 15px 15px;
+    box-sizing:border-box;
+    max-width:1330px;
+    margin:0 auto;
+    margin-bottom:20px;
+    border:2px solid black;
+
+    border-radius: 10px;
+
+}
+.li_wrapper{
+
+   display:flex;
+   list-style:none;
+}
+.li_wrapper li{
+    margin-left:60px;
+    line-height: 1.5;
+    font-size: 19px;
+
+}
+.li_wrapper li a{
+   text-decoration:none;
+   color:black;
+}
+.li_wrapper li a:hover{
+
+   color:#35a699
+}
+/*стили Подвала*/
+footer{
+     border:2px solid black;
+     margin-top:20px;
+     border-radius: 10px;
+     padding:10px;
+}

@@ -1,0 +1,81 @@
+body{
+    font-family: 'IBM Plex Serif', serif;
+    color: black;
+
+    padding: 30px 15px;
+    max-width:320px;
+    margin:0 auto;
+    border:2px solid black;
+
+    border-radius: 10px;
+}
+.flash{
+    font-size:19px;
+    margin:10px;
+    border-radius: 10px;
+}
+t1{
+    font-size:30px;
+    margin-bottom:20px;
+}
+:focus::-webkit-input-placeholder {
+  color: transparent
+}
+
+:focus::-moz-placeholder {
+  color: transparent
+}
+
+:focus:-moz-placeholder {
+  color: transparent
+}
+
+:focus:-ms-input-placeholder {
+  color: transparent
+}
+input::-webkit-input-placeholder       {opacity: 1; transition: opacity 0.4s ease;}
+input::-moz-placeholder                {opacity: 1; transition: opacity 0.4s ease;}
+input:-moz-placeholder                 {opacity: 1; transition: opacity 0.4s ease;}
+input:-ms-input-placeholder            {opacity: 1; transition: opacity 0.4s ease;}
+input:focus::-webkit-input-placeholder {opacity: 0; transition: opacity 0.4s ease;}
+input:focus::-moz-placeholder          {opacity: 0; transition: opacity 0.4s ease;}
+input:focus:-moz-placeholder           {opacity: 0; transition: opacity 0.4s ease;}
+input:focus:-ms-input-placeholder      {opacity: 0; transition: opacity 0.4s ease;}
+::placeholder {
+        text-align: center;
+}
+.form_wrapper{
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+}
+.email_form{
+
+    width: 250px;
+    height: 40px;
+    text-align:center;
+    border-radius:10px;
+    font-size: 1em;
+
+}
+.password_form{
+
+    width: 250px;
+    height: 40px;
+    text-align:center;
+    border-radius:10px;
+    font-size: 1em;
+
+}
+.btn{
+     width:173px;
+     height:45px;
+     border-radius:15px;
+     font-size:17px;
+
+}
+.btn:hover{
+      background: #C0C0C0;
+}
