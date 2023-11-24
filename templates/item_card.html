@@ -5,13 +5,18 @@
 
 <body>
 <div class="item_card">
-    <img src="{{ url_for('static', filename='pic1.jpg') }}" height="200px" width="200px" id="item_image"/>
+    <img src="{{ url_for('static', filename='img/pic1.jpg') }}" height="200px" width="200px" id="item_image"/>
     <div class="item_card_text">
         
-        <h1 id="item_id">Код товара:{{item_info.code}}</h1>
-        <h1 id="item_price">Цена товара:{{item_info.price}}</h1>
-        <h1 id="item_description">Описание товара:{{item_info.description}}</h1>
-        <h1 id="item_sctructure">Состав товара:{{item_info.structure}}</h1>
+        <h1 id="item_id">Код товара:{{item_p.id}}</h1>
+        <h1 id="item_price">Цена товара:{{item_p.price}}</h1>
+        <h1 id="item_description">Описание товара:{{item_p.description}}</h1>
+        <h1 id="item_sctructure">Состав товара:{{item_p.structure}}</h1>
+        <h1 id="item_date_of_manufacture">Дата изготовления:{{item_p.date_of_manufacture}}</h1>
+        <h1 id="item_storage_life">Срок хранения:{{item_p.storage_life}}</h1>
+       
+        
+        
     </div>
 
 </div>
