@@ -18,7 +18,7 @@ div#catalog_container {
 .catalog_window {
     border: 2px solid black;
     margin: 10%;
-    max-height: 600px;
+    max-height: 500px;
     overflow: scroll;
 }
 
@@ -40,7 +40,7 @@ h1#catalog_title {
 
 
     max-height: 200px;
-    max-width: 200px;
+    max-width: 400px;
     position: relative;
     display: inline-block;
     font-size: 10px;
