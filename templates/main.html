@@ -1,5 +1,21 @@
 {%extends "base.html" %}
 
+
     {%block content%}
-        DODICK123
+    <div class="container" id="catalog_container">
+        <h1 id="catalog_title">Каталог товаров</h1>
+        <div class="catalog_window">
+            
+        <!--item_p указатель на объект словаря с товарами-->
+        {%for item_p in items%}
+            {% include "item_card.html" %}
+        {%endfor%}
+        </div>
+      
+        <!--basket - корзина, которую должны обновлять в карточке, и потом отправить по кнопке-->
+        <div class="basket_info">
+            <h1 id="sum_positions">Итого товаров:{{sum_quantity(basket,items)}}</h1>
+            <h1 id="sum_price">Итоговая сумма:{{sum_price(basket,items)}}</h1>
+        </div>
+    </div>
     {%endblock%}

@@ -2,13 +2,15 @@ import sqlite3
 import time
 
 from sqlalchemy import exc
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, json, jsonify
 from datetime import datetime
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'gfdgfdkgfdjfgd7fddjfd'
 # Авторизация
 login_manager = LoginManager(app)
@@ -67,6 +69,20 @@ class Admin(db.Model):
         return f"<users {self.id}>"
 
 
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    structure = db.Column(db.String(100), nullable=False)
+    date_of_manufacture = db.Column(db.Date, nullable=False)
+    storage_life = db.Column(db.Integer, nullable=False)
+    pic_url = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f"<items {self.id}>"
+
+
 # функций баз данных
 
 def init_db():
@@ -76,6 +92,36 @@ def init_db():
     """
     with app.app_context():
         db.create_all()
+
+
+def add_item(id, name, price, description, structure, date_of_manufacture, storage_life, pic_url):
+    try:
+
+        item = Item(id=id, name=name, price=price, description=description, structure=structure,
+                    date_of_manufacture=date_of_manufacture, storage_life=storage_life, pic_url=pic_url)
+        db.session.add(item)
+        db.session.commit()
+        return (1, True)
+    except exc.SQLAlchemyError as e:
+        db.session().rollback()
+        print("Ошибка при добавлений пользователя в БД")
+        print(e)
+        print('error-code:', e.code)
+        return (e.code, False)
+
+
+def get_item_by_id(id):
+    try:
+
+        item = Item.query.filter_by(id=id).all()
+        return item
+    except exc.SQLAlchemyError as e:
+
+        db.session().rollback()
+        print("Ошибка при Поиске товара в БД по id")
+        print(e)
+        print('error-code:', e.code)
+        return False
 
 
 def add_user(email, hash):
@@ -129,10 +175,51 @@ def get_user_by_email(email):
         return False
 
 
-# роуты
-@app.route('/')
+# для работы с корзиной
+basket = []
+basket.append({"item_code": "1", "quantity": "10"})
+basket.append({"item_code": "2", "quantity": "5"})
+
+
+# считает общее кол-во товаров в корзине
+def sum_quantity(basket, items):
+    sum = 0
+    for i in basket:
+        for item_p in items:
+            print(i.get("item_code"))
+            print(item_p.id)
+            if int(i.get("item_code")) == int(item_p.id):
+                print("equal")
+
+                sum = sum + int(i.get("quantity"))
+    return sum
+
+
+# считает сумму выбранных товаров, basket-словарь корзина, items-словарь всех товаров, просто перебираем)))
+def sum_price(basket, items):
+    sum = 0
+    for i in basket:
+        for item_p in items:
+            print(i.get("item_code"))
+            print(item_p.id)
+            if int(i.get("item_code")) == int(item_p.id):
+                print("equal")
+                print(int(item_p.price) * int(i.get("quantity")))
+                sum = sum + (int(item_p.price) * int(i.get("quantity")))
+    return sum
+
+
+@app.route('/get_len', methods=['GET', 'POST'])
+def get_len():
+    name = request.form['quantity']
+    return json.dumps({'len': len(name)})
+
+
+@app.route('/', methods=['POST', 'GET'])
 def main():
-    return render_template('main.html')
+    items = Item.query.all()  # получаем все товары
+    return render_template('main.html', items=items, basket=basket, int=int, sum_price=sum_price,
+                           sum_quantity=sum_quantity)
 
 
 @app.route('/reg', methods=['POST', 'GET'])
