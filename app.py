@@ -2,7 +2,7 @@ import sqlite3
 import time
 
 from sqlalchemy import exc
-from flask import Flask, render_template, request, flash, redirect, url_for,json,jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, json, jsonify
 from datetime import datetime
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
@@ -68,18 +68,20 @@ class Admin(db.Model):
     def __repr__(self):
         return f"<users {self.id}>"
 
+
 class Item(db.Model):
-    id=db.Column(db.Integer,primary_key=True)
-    name=db.Column(db.String(50),nullable=False)
-    price=db.Column(db.Integer,nullable=False)
-    description=db.Column(db.String(100),nullable=False)
-    structure=db.Column(db.String(100),nullable=False)
-    date_of_manufacture=db.Column(db.Date,nullable=False)
-    storage_life=db.Column(db.Integer,nullable=False)
-    pic_url=db.Column(db.String(100),nullable=False)
-    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    structure = db.Column(db.String(100), nullable=False)
+    date_of_manufacture = db.Column(db.Date, nullable=False)
+    storage_life = db.Column(db.Integer, nullable=False)
+    pic_url = db.Column(db.String(100), nullable=False)
+
     def __repr__(self):
         return f"<items {self.id}>"
+
 
 # функций баз данных
 
@@ -91,20 +93,23 @@ def init_db():
     with app.app_context():
         db.create_all()
 
-def add_item(id,name,price,description,structure,date_of_manufacture,storage_life,pic_url):
+
+def add_item(id, name, price, description, structure, date_of_manufacture, storage_life, pic_url):
     try:
-        
-        item=Item(id=id,name=name,price=price,description=description,structure=structure,date_of_manufacture=date_of_manufacture,storage_life=storage_life,pic_url=pic_url)
+
+        item = Item(id=id, name=name, price=price, description=description, structure=structure,
+                    date_of_manufacture=date_of_manufacture, storage_life=storage_life, pic_url=pic_url)
         db.session.add(item)
         db.session.commit()
-        return(1,True)
+        return (1, True)
     except exc.SQLAlchemyError as e:
         db.session().rollback()
         print("Ошибка при добавлений пользователя в БД")
         print(e)
         print('error-code:', e.code)
         return (e.code, False)
-    
+
+
 def get_item_by_id(id):
     try:
 
@@ -117,6 +122,7 @@ def get_item_by_id(id):
         print(e)
         print('error-code:', e.code)
         return False
+
 
 def add_user(email, hash):
     try:
@@ -169,51 +175,84 @@ def get_user_by_email(email):
         return False
 
 
+# для работы с корзиной
 
-#для работы с корзиной
-basket=[]
-basket.append({"item_code":"1","quantity":"10"})
-basket.append({"item_code":"2","quantity":"5"})
+basket = {}
+basket[1]=10
+basket[2]=15
 
-
-#считает общее кол-во товаров в корзине
-def sum_quantity(basket,items):
-    sum=0
-    for i in basket: 
-         for item_p in items:
-                    print(i.get("item_code"))
-                    print(item_p.id)
-                    if int(i.get("item_code")) == int(item_p.id):
-                        print("equal")
-                        
-                        sum=sum+int(i.get("quantity"))
-    return sum
-
-#считает сумму выбранных товаров, basket-словарь корзина, items-словарь всех товаров, просто перебираем)))
-def sum_price(basket,items):
-    sum=0
-    for i in basket: 
-         for item_p in items:
-                    print(i.get("item_code"))
-                    print(item_p.id)
-                    if int(i.get("item_code")) == int(item_p.id):
-                        print("equal")
-                        print(int(item_p.price) * int(i.get("quantity")))
-                        sum=sum+(int(item_p.price) * int(i.get("quantity")))
+# считает общее кол-во товаров в корзине
+def sum_quantity(basket, items):
+    sum = 0
+    for key in basket.keys():
+        for item in items:
+            #print(item.id)
+            #print(item.price)
+            if key==item.id:
+                #print('ok')
+                sum=sum + basket.get(key)
     return sum
 
 
-@app.route('/get_len', methods=['GET', 'POST'])
-def get_len():
-    name = request.form['quantity']
-    return json.dumps({'len': len(name)})
+# считает сумму всех выбранных товаров, basket-словарь корзина, items-словарь всех товаров, просто перебираем)))
+def sum_price(basket, items):
+    sum = 0
+    #print(items)
+    for key in basket.keys():
+        for item in items:
+            #print(item.id)
+            #print(item.price)
+            if key==item.id:
+                #print('ok')
+                sum=sum + basket.get(key) * item.price
+    return sum
+def delete_from_basket(item_code,basket):
+    for i in basket:
+        del basket[item_code]
+    return basket
 
 
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    items=Item.query.all()#получаем все товары
-    return render_template('main.html', items=items,basket=basket,int=int,sum_price=sum_price,sum_quantity=sum_quantity)
+    
+    items = Item.query.all()  # получаем все товары
+    
+    print(basket)
+    return render_template('main.html', items=items, basket=basket,sum_price=sum_price,sum_quantity=sum_quantity)
 
+@app.route('/add_to_basket',methods=['POST','GET'])
+def add_to_basket():
+    print('request:')
+    print(request.values)
+    print(request.form['item_code'])
+    print(request.form['quantity'])
+    if(int(request.form['quantity'])< 1):
+        flash(f"Вы пытаетесь добавить 0 либо отрицательное число товаров в корзину!")
+        return redirect(url_for('main',basket=basket))
+    id=int(request.form['item_code'])
+    qu=int(request.form['quantity'])
+    print(basket)
+    #print(basket[id])
+    if(basket.get(id)):
+        basket[id]=qu+basket.get(id)
+    else:
+        basket[id]=qu
+    return redirect(url_for('main',basket=basket))
+
+
+@app.route('/delete_from_basket',methods=['POST','GET'])
+def delete_from_basket():
+    print('test delete')
+    print(request.form['item_code'])
+    id=int(request.form['item_code'])
+    del basket[id]
+    
+    return redirect(url_for('main',basket=basket))
+
+#ТУТ НУЖНО ПРОПИСАТЬ УСЛОВИЕ, ЧТО ПЕРЕХОДИМ В КОРЗИНУ ТОЛЬКО ЕСЛИ АВТОРИЗОВАН, ЕСЛИ НЕТ, ТО НА СТРАНИЦУ ВХОДА
+@app.route('/to_basket',methods=['POST','GET'])
+def to_basket():
+    return render_template('basket.html',basket=basket,print=print)
 
 
 
@@ -242,7 +281,7 @@ def reg():
             flash(f'Что-то пошло нет так..Может вы уже зарегистрированы?')
     return render_template('reg.html')
 
-#я устал
+
 @app.route('/auth', methods=['POST', 'GET'])
 def auth():
     # todo:Продумать авторизацию администратора
@@ -261,8 +300,8 @@ def auth():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('main'))    
+    return redirect(url_for('main'))
 
-    
+
 if __name__ == "__main__":
     app.run(debug=True)

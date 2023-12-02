@@ -5,6 +5,9 @@
     <div class="container" id="catalog_container">
         <h1 id="catalog_title">Каталог товаров</h1>
         <div class="catalog_window">
+            {% for msg in get_flashed_messages() %}
+                             <div class="flash">{{msg}}</div>
+                         {%endfor%}
             
         <!--item_p указатель на объект словаря с товарами-->
         {%for item_p in items%}
@@ -16,6 +19,12 @@
         <div class="basket_info">
             <h1 id="sum_positions">Итого товаров:{{sum_quantity(basket,items)}}</h1>
             <h1 id="sum_price">Итоговая сумма:{{sum_price(basket,items)}}</h1>
+        </div>
+
+        <div class="to_basket">
+            <form action="/to_basket" method='post'>
+                <button type="submit">Перейти в корзину</button>
+            </form>
         </div>
     </div>
     {%endblock%}
