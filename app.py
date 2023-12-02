@@ -242,7 +242,7 @@ def reg():
             flash(f'Что-то пошло нет так..Может вы уже зарегистрированы?')
     return render_template('reg.html')
 
-
+#я устал
 @app.route('/auth', methods=['POST', 'GET'])
 def auth():
     # todo:Продумать авторизацию администратора
