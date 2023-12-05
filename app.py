@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, jso
 from datetime import datetime
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user, login_user, logout_user
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ class UserLogin():
         return False
 
     def get_id(self):
-        return str(self.__user[0].id)
+        return str(self.__user.id)
 
 
 @login_manager.user_loader
@@ -143,7 +143,7 @@ def get_user_by_id(id):
     try:
 
         user = Users.query.filter_by(id=id).all()
-        return user
+        return user[0]
     except exc.SQLAlchemyError as e:
 
         db.session().rollback()
@@ -163,7 +163,7 @@ def get_user_by_email(email):
     """
     try:
         user = Users.query.filter_by(email=email).all()
-        return user
+        return user[0]
 
 
     except exc.SQLAlchemyError as e:
@@ -178,35 +178,38 @@ def get_user_by_email(email):
 # для работы с корзиной
 
 basket = {}
-basket[1]=10
-basket[2]=15
+basket[1] = 10
+basket[2] = 15
+
 
 # считает общее кол-во товаров в корзине
 def sum_quantity(basket, items):
     sum = 0
     for key in basket.keys():
         for item in items:
-            #print(item.id)
-            #print(item.price)
-            if key==item.id:
-                #print('ok')
-                sum=sum + basket.get(key)
+            # print(item.id)
+            # print(item.price)
+            if key == item.id:
+                # print('ok')
+                sum = sum + basket.get(key)
     return sum
 
 
 # считает сумму всех выбранных товаров, basket-словарь корзина, items-словарь всех товаров, просто перебираем)))
 def sum_price(basket, items):
     sum = 0
-    #print(items)
+    # print(items)
     for key in basket.keys():
         for item in items:
-            #print(item.id)
-            #print(item.price)
-            if key==item.id:
-                #print('ok')
-                sum=sum + basket.get(key) * item.price
+            # print(item.id)
+            # print(item.price)
+            if key == item.id:
+                # print('ok')
+                sum = sum + basket.get(key) * item.price
     return sum
-def delete_from_basket(item_code,basket):
+
+
+def delete_from_basket(item_code, basket):
     for i in basket:
         del basket[item_code]
     return basket
@@ -214,46 +217,51 @@ def delete_from_basket(item_code,basket):
 
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    
+    # if current_user.is_authenticated():
+    #
+    #
+    #     print('1')
+    print(current_user.get_id())
     items = Item.query.all()  # получаем все товары
-    
-    print(basket)
-    return render_template('main.html', items=items, basket=basket,sum_price=sum_price,sum_quantity=sum_quantity)
 
-@app.route('/add_to_basket',methods=['POST','GET'])
+    print(basket)
+    return render_template('main.html', items=items, basket=basket, sum_price=sum_price, sum_quantity=sum_quantity)
+
+
+@app.route('/add_to_basket', methods=['POST', 'GET'])
 def add_to_basket():
     print('request:')
     print(request.values)
     print(request.form['item_code'])
     print(request.form['quantity'])
-    if(int(request.form['quantity'])< 1):
+    if (int(request.form['quantity']) < 1):
         flash(f"Вы пытаетесь добавить 0 либо отрицательное число товаров в корзину!")
-        return redirect(url_for('main',basket=basket))
-    id=int(request.form['item_code'])
-    qu=int(request.form['quantity'])
+        return redirect(url_for('main', basket=basket))
+    id = int(request.form['item_code'])
+    qu = int(request.form['quantity'])
     print(basket)
-    #print(basket[id])
-    if(basket.get(id)):
-        basket[id]=qu+basket.get(id)
+    # print(basket[id])
+    if (basket.get(id)):
+        basket[id] = qu + basket.get(id)
     else:
-        basket[id]=qu
-    return redirect(url_for('main',basket=basket))
+        basket[id] = qu
+    return redirect(url_for('main', basket=basket))
 
 
-@app.route('/delete_from_basket',methods=['POST','GET'])
+@app.route('/delete_from_basket', methods=['POST', 'GET'])
 def delete_from_basket():
     print('test delete')
     print(request.form['item_code'])
-    id=int(request.form['item_code'])
+    id = int(request.form['item_code'])
     del basket[id]
-    
-    return redirect(url_for('main',basket=basket))
 
-#ТУТ НУЖНО ПРОПИСАТЬ УСЛОВИЕ, ЧТО ПЕРЕХОДИМ В КОРЗИНУ ТОЛЬКО ЕСЛИ АВТОРИЗОВАН, ЕСЛИ НЕТ, ТО НА СТРАНИЦУ ВХОДА
-@app.route('/to_basket',methods=['POST','GET'])
+    return redirect(url_for('main', basket=basket))
+
+
+# ТУТ НУЖНО ПРОПИСАТЬ УСЛОВИЕ, ЧТО ПЕРЕХОДИМ В КОРЗИНУ ТОЛЬКО ЕСЛИ АВТОРИЗОВАН, ЕСЛИ НЕТ, ТО НА СТРАНИЦУ ВХОДА
+@app.route('/to_basket', methods=['POST', 'GET'])
 def to_basket():
-    return render_template('basket.html',basket=basket,print=print)
-
+    return render_template('basket.html', basket=basket, print=print)
 
 
 @app.route('/reg', methods=['POST', 'GET'])
@@ -288,9 +296,8 @@ def auth():
     if request.method == "POST":
         user = get_user_by_email(request.form['email'])
 
-        if user and check_password_hash(user[0].password, request.form["password"]):
+        if user and check_password_hash(user.password, request.form["password"]):
             userlogin = UserLogin().create(user)
-
             login_user(userlogin)
             return redirect(url_for("main"))
         flash("Неверная пара логин/Пароль", 'error')
@@ -298,6 +305,7 @@ def auth():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('main'))
