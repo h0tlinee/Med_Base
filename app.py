@@ -34,8 +34,12 @@ class UserLogin():
     def is_anonymous(self):
         return False
 
+    def is_admin(self):
+        return self.__user.adm_flag
+
     def get_id(self):
         return str(self.__user.id)
+
 
 
 @login_manager.user_loader
@@ -54,20 +58,10 @@ class Users(db.Model):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(500), nullable=True)
     date = db.Column(db.DateTime, default=datetime.utcnow)
+    adm_flag = db.Column(db.Boolean, nullable=True)
 
     def __repr__(self):
         return f"<users {self.id}>"
-
-
-class Admin(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(500), nullable=True)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f"<users {self.id}>"
-
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -114,7 +108,7 @@ def get_item_by_id(id):
     try:
 
         item = Item.query.filter_by(id=id).all()
-        return item
+        return item[0]
     except exc.SQLAlchemyError as e:
 
         db.session().rollback()
@@ -126,7 +120,7 @@ def get_item_by_id(id):
 
 def add_user(email, hash):
     try:
-        u = Users(email=email, password=hash)
+        u = Users(email=email, password=hash,adm_flag=False)
         db.session.add(u)
         db.session.commit()
         return (1, True)
@@ -174,7 +168,19 @@ def get_user_by_email(email):
         print('error-code:', e.code)
         return False
 
+def add_admin():
+    try:
+        u = Users(email="admin@mail.ru", password=generate_password_hash('123456'), adm_flag=True)
+        db.session.add(u)
+        db.session.commit()
+        return (1, True)
+    except exc.SQLAlchemyError as e:
 
+        db.session().rollback()
+        print("Ошибка при добавлений админа в БД")
+        print(e)
+        print('error-code:', e.code)
+        return (e.code, False)
 # для работы с корзиной
 
 basket = {}
@@ -217,30 +223,20 @@ def delete_from_basket(item_code, basket):
 
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    # if current_user.is_authenticated():
-    #
-    #
-    #     print('1')
-    print(current_user.get_id())
     items = Item.query.all()  # получаем все товары
-
-    print(basket)
+    # if (current_user.is_authenticated()):
+    #     print("Это админ? ",current_user.is_admin())
     return render_template('main.html', items=items, basket=basket, sum_price=sum_price, sum_quantity=sum_quantity)
 
 
 @app.route('/add_to_basket', methods=['POST', 'GET'])
 def add_to_basket():
-    print('request:')
-    print(request.values)
-    print(request.form['item_code'])
-    print(request.form['quantity'])
     if (int(request.form['quantity']) < 1):
         flash(f"Вы пытаетесь добавить 0 либо отрицательное число товаров в корзину!")
         return redirect(url_for('main', basket=basket))
     id = int(request.form['item_code'])
     qu = int(request.form['quantity'])
-    print(basket)
-    # print(basket[id])
+
     if (basket.get(id)):
         basket[id] = qu + basket.get(id)
     else:
@@ -250,8 +246,7 @@ def add_to_basket():
 
 @app.route('/delete_from_basket', methods=['POST', 'GET'])
 def delete_from_basket():
-    print('test delete')
-    print(request.form['item_code'])
+
     id = int(request.form['item_code'])
     del basket[id]
 
