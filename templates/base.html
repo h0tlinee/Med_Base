@@ -13,11 +13,17 @@
 <body>
 
        {% if current_user.is_authenticated %}
-       <div>{{current_user}}</div>
-        {% include 'header_auth_user.htm' %}
-  {% else %}
-    {% include 'header_non_auth.htm' %}
-  {% endif %}
+
+
+
+            {% if current_user.is_admin()  %}
+                {% include 'header_adm.html' %}
+            {% else %}
+                {% include 'header_auth_user.htm' %}
+            {% endif %}
+       {% else %}
+            {% include 'header_non_auth.htm' %}
+       {% endif %}
 
 {%block content%}
 {%endblock%}

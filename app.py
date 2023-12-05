@@ -41,7 +41,6 @@ class UserLogin():
         return str(self.__user.id)
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     print('load_user')
@@ -62,6 +61,7 @@ class Users(db.Model):
 
     def __repr__(self):
         return f"<users {self.id}>"
+
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -88,17 +88,22 @@ def init_db():
         db.create_all()
 
 
-def add_item(id, name, price, description, structure, date_of_manufacture, storage_life, pic_url):
+def add_item(name, price, description, structure, date_of_manufacture, storage_life, pic_url):
     try:
 
-        item = Item(id=id, name=name, price=price, description=description, structure=structure,
-                    date_of_manufacture=date_of_manufacture, storage_life=storage_life, pic_url=pic_url)
+        item = Item(name=name,
+                    price=price,
+                    description=description,
+                    structure=structure,
+                    date_of_manufacture=date_of_manufacture,
+                    storage_life=storage_life,
+                    pic_url=pic_url)
         db.session.add(item)
         db.session.commit()
         return (1, True)
     except exc.SQLAlchemyError as e:
         db.session().rollback()
-        print("Ошибка при добавлений пользователя в БД")
+        print("Ошибка при добавлений Товара в БД")
         print(e)
         print('error-code:', e.code)
         return (e.code, False)
@@ -120,7 +125,7 @@ def get_item_by_id(id):
 
 def add_user(email, hash):
     try:
-        u = Users(email=email, password=hash,adm_flag=False)
+        u = Users(email=email, password=hash, adm_flag=False)
         db.session.add(u)
         db.session.commit()
         return (1, True)
@@ -168,6 +173,7 @@ def get_user_by_email(email):
         print('error-code:', e.code)
         return False
 
+
 def add_admin():
     try:
         u = Users(email="admin@mail.ru", password=generate_password_hash('123456'), adm_flag=True)
@@ -181,11 +187,11 @@ def add_admin():
         print(e)
         print('error-code:', e.code)
         return (e.code, False)
+
+
 # для работы с корзиной
 
 basket = {}
-basket[1] = 10
-basket[2] = 15
 
 
 # считает общее кол-во товаров в корзине
@@ -224,8 +230,6 @@ def delete_from_basket(item_code, basket):
 @app.route('/', methods=['POST', 'GET'])
 def main():
     items = Item.query.all()  # получаем все товары
-    # if (current_user.is_authenticated()):
-    #     print("Это админ? ",current_user.is_admin())
     return render_template('main.html', items=items, basket=basket, sum_price=sum_price, sum_quantity=sum_quantity)
 
 
@@ -246,7 +250,6 @@ def add_to_basket():
 
 @app.route('/delete_from_basket', methods=['POST', 'GET'])
 def delete_from_basket():
-
     id = int(request.form['item_code'])
     del basket[id]
 
@@ -304,6 +307,24 @@ def auth():
 def logout():
     logout_user()
     return redirect(url_for('main'))
+
+
+@app.route('/add_item', methods=['POST', 'GET'])
+def add_item1():
+    if request.method == 'POST':
+
+        print(request.form['date_item'] , type(request.form['date_item']))
+        date1=request.form['date_item'].split('-')
+        print(date)
+        add_item(name=request.form['name_item'],
+                 price=int(request.form['price']),
+                 description=request.form['description'],
+                 structure=request.form['composition'],
+                 date_of_manufacture=date(int(date1[0]),int(date1[1]),int(date1[2])),
+                 storage_life=int(request.form['expiration_date']),
+                 pic_url=request.form['img_file_path'])
+        flash("Товар успешно добавлен")
+    return render_template('add_item.html')
 
 
 if __name__ == "__main__":
