@@ -4,6 +4,7 @@
     {%block content%}
     <div class="container" id="catalog_container">
         <h1 id="catalog_title">Каталог товаров</h1>
+       
         <div class="catalog_window">
             {% for msg in get_flashed_messages() %}
                              <div class="flash">{{msg}}</div>
@@ -22,9 +23,13 @@
         </div>
 
         <div class="to_basket">
-            <form action="/to_basket" method='post'>
-                <button type="submit">Перейти в корзину</button>
+            <form action="/add_basket" method='post'>
+                <button type="submit">Обновить корзину</button>
             </form>
+        </div>
+
+        <div class="paid_items">
+            
         </div>
     </div>
     {%endblock%}

@@ -1,5 +1,19 @@
 {%extends "base.html" %}
 {%block content%}
-    <h1>корзина : {{basket}}</h1>
+    <h1>ID пользователя: {{current_user.get_id()}}</h1>
+     
+    <ul>
+    {%for key in res.keys()%}
+    {%set item_p=Item.query.filter_by(id=int(key)).all()%}
+    
+    {%include "basket_card.html"%}
+    
+    {%endfor%}
+    </ul>
+    
+    <h1>Итого: {{sum_price((res),items)}}</h1>
+    <form action="/pay" method="post">
+        <button type="submit"> Заказать доставку</button>
+    </form>
 
 {%endblock%}

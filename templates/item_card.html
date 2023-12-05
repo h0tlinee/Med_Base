@@ -17,7 +17,17 @@
         <h1 id="item_description">Описание товара:{{item_p.description}}</h1>
         <h1 id="item_sctructure">Состав товара:{{item_p.structure}}</h1>
         <h1 id="item_date_of_manufacture">Дата изготовления:{{item_p.date_of_manufacture}}</h1>
-        <h1 id="item_storage_life">Срок хранения:{{item_p.storage_life}} д.</h1>
+        <h1 id="item_storage_life">Срок хранения:
+            {%if item_p.storage_life==0%}
+                неограниченно
+            {%else%}
+            {{item_p.storage_life}} д.
+            {%endif%}
+
+            
+        
+        
+        </h1>
         <div class="in_basket_info">
             <h2>В корзине:
                 {%if basket.get(item_p.id)%}

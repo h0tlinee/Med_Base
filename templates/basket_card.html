@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+
+
+
+
+<body>
+
+<div class="item_card">
+    {%set file_name= item_p[0].pic_url %}
+    <img src="{{ url_for('static', filename=file_name) }}" height="200px" width="200px" id="item_image"/>
+    <div class="item_card_text">
+        <h1 id="item_id">Код товара:{{item_p[0].id}}</h1>
+        <h1 id="item_name">Наименование товара:{{item_p[0].name}}
+        <h1 id="item_price">Цена товара:{{item_p[0].price}} руб.</h1>
+        <h1 id="item_date_of_manufacture">Дата изготовления:{{item_p[0].date_of_manufacture}}</h1>
+        <h1 id="item_storage_life">Срок хранения:
+            {%if item_p[0].storage_life==0%}
+                неограниченно
+            {%else%}
+            {{item_p[0].storage_life}} д.
+            {%endif%}
+
+            
+        
+        
+        </h1>
+        <div class="in_basket_info">
+            <h2>В корзине:
+                {%print(res.get(str(item_p[0].id)))%}
+            </h2>
+            <h2>Сумма: 
+                {%if res.get(str(item_p[0].id))%}
+                {{res.get(str(item_p[0].id)) * item_p[0].price}}
+                {%endif%}
+            руб.</h2>
+        </div>
+       
+
+       
+     
+        
+    </div>
+
+</div>
+</body>
+</html>
