@@ -1,0 +1,55 @@
+{%extends "base.html" %}
+
+
+    {%block content%}
+    <div class="container" id="catalog_container">
+        <h1 id="catalog_title">Каталог товаров</h1>
+       
+        <div class="catalog_window">
+            {% for msg in get_flashed_messages() %}
+                             <div class="flash">{{msg}}</div>
+                         {%endfor%}
+            
+        <!--item_p указатель на объект словаря с товарами-->
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_admin()  %}
+                  {%for item_p in items%}
+
+                            {% include "item_card.html"  %}
+                            <div class="a_wrapper"  >
+                        <a href="/delete_item/{{item_p.id}}" style="text-decoration:none;color:black;"> Удалить товар </a>
+                             </div>
+
+                    {%endfor%}
+                    <br>
+                {%else%}
+             {%for item_p in items%}
+                        {% include "item_card.html" %}
+             {%endfor%}
+                {% endif %}
+            {%else%}
+            {%for item_p in items%}
+                        {% include "item_card.html" %}
+            {%endfor%}
+
+
+            {% endif %}
+        </div>
+      
+        <!--basket - корзина, которую должны обновлять в карточке, и потом отправить по кнопке-->
+        <div class="basket_info">
+            <h1 id="sum_positions">Итого товаров:{{sum_quantity(basket,items)}}</h1>
+            <h1 id="sum_price">Итоговая сумма:{{sum_price(basket,items)}}</h1>
+        </div>
+
+        <div class="to_basket">
+            <form action="/add_basket" method='post'>
+                 <button type="submit" id="update">Обновить корзину</button>
+            </form>
+        </div>
+
+        <div class="paid_items">
+            
+        </div>
+    </div>
+    {%endblock%}
