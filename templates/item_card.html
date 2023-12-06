@@ -42,17 +42,22 @@
         </div>
        
 
-        <form action="/add_to_basket" method="post" name="form">
-            <input type="number" name="item_code" value="{{item_p.id}}" hidden>
-            <input type="number" name="quantity" placeholder="Введите кол-во товара" class="quantity_form">
-            <button class="btn_success"  type="submit" id="{{item_p.id}}">Добавить в корзину</button>
-            <button class="btn btn_reset" type="reset">Сбросить</button>
-        </form> 
+        <div class="forms_wrapper">
 
-        <form action="/delete_from_basket" method="post" name="form2">
-            <input type="number" name="item_code" value="{{item_p.id}}" hidden>
-            <button class="btn_delete" type="submit">Удалить из корзины</button>
-        </form>
+            <form action="/add_to_basket" method="post" name="form" class="f_form">
+                <input type="number" name="item_code" value="{{item_p.id}}" hidden>
+                <input type="number" name="quantity" placeholder="Введите кол-во товара" class="quantity_form">
+                <button class="btn_success"  type="submit" id="{{item_p.id}}">Добавить в корзину</button>
+                <button class="btn_reset" type="reset">Сбросить</button>
+            </form>
+
+            <form action="/delete_from_basket" method="post" name="form2" class="s_form">
+                <input type="number" name="item_code" value="{{item_p.id}}" hidden>
+                <button class="btn_delete" type="submit">Удалить из корзины</button>
+            </form>
+        </div>
+
+
        
      
         

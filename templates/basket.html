@@ -17,7 +17,7 @@
     {%set summ=sum_price((res),items)%}
     <form action="/pay" method="post">
         <input type="number" value={{summ}} name="summ_p" hidden>
-        <button type="submit"> Заказать доставку</button>
+        <button type="submit" id="dost"> Заказать доставку</button>
     </form>
 
 {%endblock%}
