@@ -17,7 +17,7 @@
 
                             {% include "item_card.html"  %}
                             <div class="a_wrapper"  >
-                        <a href="/" style="text-decoration:none;color:black;"> Удалить товар </a>
+                        <a href="/delete_item/{{item_p.id}}" style="text-decoration:none;color:black;"> Удалить товар </a>
                              </div>
 
                     {%endfor%}
@@ -44,7 +44,7 @@
 
         <div class="to_basket">
             <form action="/add_basket" method='post'>
-                <button type="submit">Обновить корзину</button>
+                 <button type="submit" id="update">Обновить корзину</button>
             </form>
         </div>
 

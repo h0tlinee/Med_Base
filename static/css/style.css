@@ -70,6 +70,7 @@ div#catalog_container {
     border-radius: 10px;
     margin: 10%;
     max-height: 500px;
+    margin-top: 15px;
     overflow: scroll;
     overflow-x: hidden;
 
@@ -77,6 +78,9 @@ div#catalog_container {
 
 h1#catalog_title {
     text-align: center;
+    font-family: 'Lobster', sans-serif;
+    font-size: 40px;
+
 }
 
 .item_card {
@@ -119,82 +123,185 @@ h1#catalog_title {
     width: 400px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom:5px;
 }
-/*Стиль для кнопки удаления товара*/
-.a_wrapper{
-   text-decoration:none;
-   color:black;
-   border-radius:10px;
-   text-align:center;
-    border:2px solid black;
-    max-width:400px;
-    margin-left:35%;
+
+.card_form_number {
+    display: inline-block;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    width: 130px;
+}
+
+.card_form_date {
+    display: inline-block;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    width: 130px;
+}
+
+.card_form_cvc {
+    display: inline-block;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    width: 130px;
+}
+
+.card_cvc_input,
+.card_date_input,
+.card_number_input {
+    display: inline-block;
+    width: 200px;
+  height: 20px;
+  text-align: center;
+  border-radius: 10px;
+  font-size: 1em;
+  margin-bottom:10px;
+}
+
+#sum_positions {
+    margin-left: 118px;
+}
+
+#sum_price {
+    margin-left: 118px;
+}
+
+.a_wrapper {
+    text-decoration: none;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid black;
+    max-width: 400px;
+    margin-left: 35%;
 
 
 
 }
-.a_wrapper:hover{
+
+.a_wrapper:hover {
     background: #C0C0C0;
 
 }
+
 /*Стиль для кнопок в карточке*/
-.btn_success{
-     width:120px;
-     height:35px;
-     border-radius:10px;
-     font-size:13px;
-      margin-left:5px;
-    margin-right:5px;
+.btn_success {
+    width: 120px;
+    height: 35px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-left: 5px;
+    margin-right: 5px;
 
 }
-.btn_reset{
-    width:120px;
-     height:35px;
-     border-radius:10px;
-     font-size:13px;
-      margin-left:5px;
-    margin-right:5px;
+
+.btn_reset {
+    width: 120px;
+    height: 35px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-left: 5px;
+    margin-right: 5px;
 
 }
-.btn_delete{
-     width:120px;
-     height:35px;
-     border-radius:10px;
-     font-size:13px;
-      margin-left:5px;
-    margin-right:5px;
+
+.btn_delete {
+    width: 120px;
+    height: 35px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
-button:hover{
+
+button:hover {
 
     background: #C0C0C0;
 
 }
-.quantity_form{
+
+#update {
+    width: 150px;
+    height: 55px;
+    border-radius: 10px;
+    font-size: 20px;
+    margin-left: 118px;
+    margin-right: 5px;
+}
+
+#update:hover {
+    background: #C0C0C0;
+}
+
+#dost {
+    width: 150px;
+    height: 55px;
+    border-radius: 10px;
+    font-size: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#sorry {
+    text-align: center;
+}
+
+#ref {
+    text-align: center;
+}
+
+.quantity_form {
     width: 170px;
     height: 30px;
-    text-align:center;
-    border-radius:10px;
+    text-align: center;
+    border-radius: 10px;
     font-size: 13px;
 }
+
 /*Стиль для обертки формы в карточке*/
-.forms_wrapper{
+.forms_wrapper {
 
 
-    width:700px;
+    width: 700px;
+    display: flex;
+
+
+}
+
+.f_form {
+
+    max-width: 500px;
+    padding-top: 0px;
     display:flex;
-
-
 }
-.f_form{
 
-    max-width:500px
-    padding-top:25px;
+.s_form {
+    display:flex;
+    max-width: 120px
 }
-.s_form{
 
-    max-width:120px
-}
 form {
-  display:flex;
 
+
+}
+.card_form_submit{
+    width: 120px;
+    height: 35px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom:5px;
+
+
+
+
+}
+#ref{
+color:black;
+text-decoration:none;
 }

@@ -1,10 +1,10 @@
 import sqlite3
 import time
 
-from sqlalchemy import exc,update
+from sqlalchemy import exc, update
 from flask import Flask, render_template, request, flash, redirect, url_for, json, jsonify
 from datetime import datetime
-from datetime import date
+from datetime import date, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'gfdgfdkgfdjfgd7fddjfd'
 # Авторизация
 login_manager = LoginManager(app)
-login_manager.login_view='auth'
+login_manager.login_view = 'auth'
 
 
 class UserLogin():
@@ -43,7 +43,6 @@ class UserLogin():
         return str(self.__user.id)
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     print('load_user')
@@ -65,6 +64,7 @@ class Users(db.Model):
     def __repr__(self):
         return f"<users {self.id}>"
 
+
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -78,12 +78,14 @@ class Item(db.Model):
     def __repr__(self):
         return f"<items {self.id}>"
 
+
 class Basket(db.Model):
-    
-    user_id=db.Column(db.Integer,db.ForeignKey('users.id'),primary_key=True)
-    basket=db.Column(db.String(300))
-    
-upd=update(Basket)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    basket = db.Column(db.String(300))
+
+
+upd = update(Basket)
+
 
 # функций баз данных
 
@@ -128,7 +130,7 @@ def get_item_by_id(id):
 
 def add_user(email, hash):
     try:
-        u = Users(email=email, password=hash,adm_flag=False)
+        u = Users(email=email, password=hash, adm_flag=False)
         db.session.add(u)
         db.session.commit()
         return (1, True)
@@ -176,6 +178,7 @@ def get_user_by_email(email):
         print('error-code:', e.code)
         return False
 
+
 def add_admin():
     try:
         u = Users(email="admin@mail.ru", password=generate_password_hash('123456'), adm_flag=True)
@@ -189,22 +192,22 @@ def add_admin():
         print(e)
         print('error-code:', e.code)
         return (e.code, False)
-    
-    
+
+
 def add_user_basket(basket):
     try:
-        if(db.session.query(Basket.user_id).filter_by(user_id=current_user.get_id()).first() is not None):
+        if (db.session.query(Basket.user_id).filter_by(user_id=current_user.get_id()).first() is not None):
             print('TEST exist')
-            i=db.session.query(Basket).get(current_user.get_id())
-            i.basket=json.dumps(basket)
+            i = db.session.query(Basket).get(current_user.get_id())
+            i.basket = json.dumps(basket)
             db.session.add(i)
             db.session.commit()
-            
-            
+
+
         else:
             print('test not exist')
-            user_id=current_user.get_id()
-            u = Basket(user_id=user_id,basket=json.dumps(basket))
+            user_id = current_user.get_id()
+            u = Basket(user_id=user_id, basket=json.dumps(basket))
             db.session.add(u)
             db.session.commit()
             return (1, True)
@@ -215,9 +218,10 @@ def add_user_basket(basket):
         print(e)
         print('error-code:', e.code)
         return (e.code, False)
-    
-#def get_basket_by_id(id):
-        
+
+
+# def get_basket_by_id(id):
+
 
 # для работы с корзиной
 
@@ -260,11 +264,8 @@ def delete_from_basket(item_code, basket):
 @app.route('/', methods=['POST', 'GET'])
 def main():
     items = Item.query.all()  # получаем все товары
-    
-    # if (current_user.is_authenticated()):
-    #     print("Это админ? ",current_user.is_admin())
-    #add_item(5,"Гематоген",69,"Биологически активная добавка с добавлением железа","Сахар, молоко цельное сгущенное с сахаром, патока крахмальная, альбумин черный пищевой, мед, «Виролизин-С» (лизина гидрохлорид), ароматизатор натуральный «Ваниль», вода очищенная",date(2022,12,25),365,"/img/gematogen.jpeg")
-    
+
+
     return render_template('main.html', items=items, basket=basket, sum_price=sum_price, sum_quantity=sum_quantity)
 
 
@@ -286,12 +287,10 @@ def add_to_basket():
 
 @app.route('/delete_from_basket', methods=['POST', 'GET'])
 def delete_from_basket():
-
     id = int(request.form['item_code'])
     del basket[id]
 
     return redirect(url_for('main', basket=basket))
-
 
 
 @app.route('/add_basket', methods=['POST', 'GET'])
@@ -299,21 +298,39 @@ def delete_from_basket():
 def to_basket():
     print(basket)
     add_user_basket(basket)
-    
+
     return redirect(url_for('basket_', basket=basket, print=print))
 
-@app.route('/to_basket',methods=['POST', 'GET'])
-def basket_():
-    bsk=Basket.query.filter_by(user_id=current_user.get_id()).all()
-    items=Item.query.all()
-    print(bsk[0].basket)
-    bsk_=bsk[0].basket
-    res=json.loads(bsk_)
-    return render_template('basket.html',  print=print,res=res,int=int,Item=Item,str=str,items=items,sum_price=sum_price)
 
-@app.route('/pay',methods=['POST', 'GET'])
+@app.route('/to_basket', methods=['POST', 'GET'])
+def basket_():
+    bsk = Basket.query.filter_by(user_id=current_user.get_id()).all()
+    items = Item.query.all()
+    print(bsk[0].basket)
+    bsk_ = bsk[0].basket
+    res = json.loads(bsk_)
+    return render_template('basket.html', print=print, res=res, int=int, Item=Item, str=str, items=items,
+                           sum_price=sum_price, Users=Users)
+
+
+@app.route('/pay', methods=['POST', 'GET'])
 def pay():
-    return render_template('payment.html')
+    flag = 0
+    a = int(request.form['summ_p'])
+    if (int(request.form['summ_p']) == 0):
+        flag = 1
+        print('flag=1')
+    return render_template('payment.html', flag=flag, a=a)
+
+
+@app.route('/success_pay', methods=['POST', 'GET'])
+def suc_pay():
+    s = request.form['summa']
+    d = date.today() + timedelta(days=15)
+
+    print(d)
+
+    return render_template('/suc_pay.html', d=d, s=s)
 
 
 @app.route('/reg', methods=['POST', 'GET'])
@@ -359,26 +376,41 @@ def auth():
 @app.route('/logout')
 @login_required
 def logout():
+    basket.clear()
     logout_user()
     return redirect(url_for('main'))
+
 
 @app.route('/add_item', methods=['POST', 'GET'])
 def add_item1():
     if request.method == 'POST':
-
-        print(request.form['date_item'] , type(request.form['date_item']))
-        date1=request.form['date_item'].split('-')
+        print(request.form['date_item'], type(request.form['date_item']))
+        date1 = request.form['date_item'].split('-')
         print(date)
         add_item(name=request.form['name_item'],
                  price=int(request.form['price']),
                  description=request.form['description'],
                  structure=request.form['composition'],
-                 date_of_manufacture=date(int(date1[0]),int(date1[1]),int(date1[2])),
+                 date_of_manufacture=date(int(date1[0]), int(date1[1]), int(date1[2])),
                  storage_life=int(request.form['expiration_date']),
                  pic_url=request.form['img_file_path'])
         flash("Товар успешно добавлен")
     return render_template('add_item.html')
 
+@app.route('/delete_item/<int:id>')
+def delete_item(id):
+    try:
+        Item.query.filter_by(id=id).delete()
+        db.session.commit()
+    except  Exception as e:
+        print(e)
+    return redirect(url_for('main'))
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
+
+
+
