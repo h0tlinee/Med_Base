@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление товара в каталог</title>
+    <link rel="stylesheet" href="../static/css/reg_auth.css">
+</head>
+<body>
+      <div class="main_wrapper">
+     <form method="post" class="form-control">
+          {% for msg in get_flashed_messages() %}
+                             <div class="flash">{{msg}}</div>
+                         {%endfor%}
+                     <div class="form_wrapper">
+                         <t1 class="add_t1">Добавление товара в каталог</t1>
+
+
+                        <input type="text" name="name_item" placeholder="Введите название средства" class="name_form" onkeydown="if(event.keyCode==13){return false;}"><br>
+                         <input type="text" name="price" placeholder="Введите Цену за единицу товара" class="name_form" onkeydown="if(event.keyCode==13){return false;}"><br>
+                         <textarea type="text" name="description" placeholder="Введите Описание Лекарства" class="description_form" onkeydown="if(event.keyCode==13){return false;}"></textarea><br>
+                          <textarea type="text" name="composition" placeholder="Введите Состав Лекарства" class="description_form" onkeydown="if(event.keyCode==13){return false;}"></textarea><br>
+                         Введите дату производства лекарства
+                         <input type="date" name="date_item"  class="date_form" onkeydown="if(event.keyCode==13){return false;}"><br>
+                         <input type="number" name="expiration_date" placeholder="Введите срок годности в днях" class="сount_form" onkeydown="if(event.keyCode==13){return false;}"><br>
+
+                         <input type="text" name="img_file_path" placeholder="Введите путь до файла" class="name_form" onkeydown="if(event.keyCode==13){return false;}"><br>
+                        <button class="btn btn-success" type="submit" >Добавить товар</button>
+                          <div class="a_wrap">
+                                 <a href ='/' class="btn btn-delete"> Вернуться на Главную </a>
+                          </div>
+                         </div>
+     </form>
+</body>
+</html>

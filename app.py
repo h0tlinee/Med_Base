@@ -96,10 +96,10 @@ def init_db():
         db.create_all()
 
 
-def add_item(id, name, price, description, structure, date_of_manufacture, storage_life, pic_url):
+def add_item(name, price, description, structure, date_of_manufacture, storage_life, pic_url):
     try:
 
-        item = Item(id=id, name=name, price=price, description=description, structure=structure,
+        item = Item(name=name, price=price, description=description, structure=structure,
                     date_of_manufacture=date_of_manufacture, storage_life=storage_life, pic_url=pic_url)
         db.session.add(item)
         db.session.commit()
@@ -361,6 +361,23 @@ def auth():
 def logout():
     logout_user()
     return redirect(url_for('main'))
+
+@app.route('/add_item', methods=['POST', 'GET'])
+def add_item1():
+    if request.method == 'POST':
+
+        print(request.form['date_item'] , type(request.form['date_item']))
+        date1=request.form['date_item'].split('-')
+        print(date)
+        add_item(name=request.form['name_item'],
+                 price=int(request.form['price']),
+                 description=request.form['description'],
+                 structure=request.form['composition'],
+                 date_of_manufacture=date(int(date1[0]),int(date1[1]),int(date1[2])),
+                 storage_life=int(request.form['expiration_date']),
+                 pic_url=request.form['img_file_path'])
+        flash("Товар успешно добавлен")
+    return render_template('add_item.html')
 
 
 if __name__ == "__main__":
