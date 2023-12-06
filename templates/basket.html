@@ -1,0 +1,23 @@
+{%extends "base.html" %}
+{%block content%}
+    {%set user_name=Users.query.filter_by(id=int(current_user.get_id())).all()%}
+    <h1 class="basket_user_info"> Корзина пользователя {{user_name[0].email}}</h1>
+    <h1>ID пользователя: {{current_user.get_id()}}</h1>
+
+    <ul>
+    {%for key in res.keys()%}
+    {%set item_p=Item.query.filter_by(id=int(key)).all()%}
+
+    {%include "basket_card.html"%}
+
+    {%endfor%}
+    </ul>
+
+    <h1>Итого: {{sum_price((res),items)}} руб.</h1>
+    {%set summ=sum_price((res),items)%}
+    <form action="/pay" method="post">
+        <input type="number" value={{summ}} name="summ_p" hidden>
+        <button type="submit" id="dost"> Заказать доставку</button>
+    </form>
+
+{%endblock%}
