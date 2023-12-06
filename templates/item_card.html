@@ -7,6 +7,7 @@
 
 <body>
 
+
 <div class="item_card">
     {%set file_name= item_p.pic_url %}
     <img src="{{ url_for('static', filename=file_name) }}" height="200px" width="200px" id="item_image"/>
@@ -24,9 +25,9 @@
             {{item_p.storage_life}} д.
             {%endif%}
 
-            
-        
-        
+
+
+
         </h1>
         <div class="in_basket_info">
             <h2>В корзине:
@@ -34,28 +35,29 @@
                 {{ basket.get(item_p.id) }}
                 {%endif%}
             </h2>
-            <h2>Сумма: 
+            <h2>Сумма:
                 {%if basket.get(item_p.id)%}
                 {{basket.get(item_p.id) * item_p.price}}
                 {%endif%}
             </h2>
         </div>
-       
+        <div class="forms_wrapper">
 
-        <form action="/add_to_basket" method="post" name="form">
-            <input type="number" name="item_code" value="{{item_p.id}}" hidden>
-            <input type="number" name="quantity" placeholder="Введите кол-во товара" class="quantity_form">
-            <button class="btn_success"  type="submit" id="{{item_p.id}}">Добавить в корзину</button>
-            <button class="btn btn_reset" type="reset">Сбросить</button>
-        </form> 
+            <form action="/add_to_basket" method="post" name="form" class="f_form">
+                <input type="number" name="item_code" value="{{item_p.id}}" hidden>
+                <input type="number" name="quantity" placeholder="Введите кол-во товара" class="quantity_form">
+                <button class="btn_success"  type="submit" id="{{item_p.id}}">Добавить в корзину</button>
+                <button class="btn_reset" type="reset">Сбросить</button>
+            </form>
 
-        <form action="/delete_from_basket" method="post" name="form2">
-            <input type="number" name="item_code" value="{{item_p.id}}" hidden>
-            <button class="btn_delete" type="submit">Удалить из корзины</button>
-        </form>
-       
-     
-        
+            <form action="/delete_from_basket" method="post" name="form2" class="s_form">
+                <input type="number" name="item_code" value="{{item_p.id}}" hidden>
+                <button class="btn_delete" type="submit">Удалить из корзины</button>
+            </form>
+        </div>
+
+
+
     </div>
 
 </div>

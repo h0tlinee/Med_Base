@@ -120,3 +120,81 @@ h1#catalog_title {
     margin-left: auto;
     margin-right: auto;
 }
+/*Стиль для кнопки удаления товара*/
+.a_wrapper{
+   text-decoration:none;
+   color:black;
+   border-radius:10px;
+   text-align:center;
+    border:2px solid black;
+    max-width:400px;
+    margin-left:35%;
+
+
+
+}
+.a_wrapper:hover{
+    background: #C0C0C0;
+
+}
+/*Стиль для кнопок в карточке*/
+.btn_success{
+     width:120px;
+     height:35px;
+     border-radius:10px;
+     font-size:13px;
+      margin-left:5px;
+    margin-right:5px;
+
+}
+.btn_reset{
+    width:120px;
+     height:35px;
+     border-radius:10px;
+     font-size:13px;
+      margin-left:5px;
+    margin-right:5px;
+
+}
+.btn_delete{
+     width:120px;
+     height:35px;
+     border-radius:10px;
+     font-size:13px;
+      margin-left:5px;
+    margin-right:5px;
+}
+button:hover{
+
+    background: #C0C0C0;
+
+}
+.quantity_form{
+    width: 170px;
+    height: 30px;
+    text-align:center;
+    border-radius:10px;
+    font-size: 13px;
+}
+/*Стиль для обертки формы в карточке*/
+.forms_wrapper{
+
+
+    width:700px;
+    display:flex;
+
+
+}
+.f_form{
+
+    max-width:500px
+    padding-top:25px;
+}
+.s_form{
+
+    max-width:120px
+}
+form {
+  display:flex;
+
+}

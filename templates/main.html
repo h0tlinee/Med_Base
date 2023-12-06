@@ -11,9 +11,29 @@
                          {%endfor%}
             
         <!--item_p указатель на объект словаря с товарами-->
-        {%for item_p in items%}
-            {% include "item_card.html" %}
-        {%endfor%}
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_admin()  %}
+                  {%for item_p in items%}
+
+                            {% include "item_card.html"  %}
+                            <div class="a_wrapper"  >
+                        <a href="/" style="text-decoration:none;color:black;"> Удалить товар </a>
+                             </div>
+
+                    {%endfor%}
+                    <br>
+                {%else%}
+             {%for item_p in items%}
+                        {% include "item_card.html" %}
+             {%endfor%}
+                {% endif %}
+            {%else%}
+            {%for item_p in items%}
+                        {% include "item_card.html" %}
+            {%endfor%}
+
+
+            {% endif %}
         </div>
       
         <!--basket - корзина, которую должны обновлять в карточке, и потом отправить по кнопке-->
