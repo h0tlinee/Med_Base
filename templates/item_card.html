@@ -7,7 +7,7 @@
 
 <body>
 
-<div class="item_card">
+<div class="item_card" >
     {%set file_name= item_p.pic_url %}
     <img src="{{ url_for('static', filename=file_name) }}" height="200px" width="200px" id="item_image"/>
     <div class="item_card_text">

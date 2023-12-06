@@ -70,6 +70,7 @@ div#catalog_container {
     border-radius: 10px;
     margin: 10%;
     max-height: 500px;
+    margin-top: 15px;
     overflow: scroll;
     overflow-x: hidden;
 
@@ -77,6 +78,9 @@ div#catalog_container {
 
 h1#catalog_title {
     text-align: center;
+    font-family: 'Lobster', sans-serif;
+    font-size: 40px;
+
 }
 
 .item_card {
@@ -119,4 +123,35 @@ h1#catalog_title {
     width: 400px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.card_form_number {
+    display: inline-block;
+    border: 2px solid black;
+    text-align: center;
+    width: 130px;
+}
+
+.card_form_date {
+    display: inline-block;
+    border: 2px solid black;
+    text-align: center;
+    width: 130px;
+}
+
+.card_form_cvc {
+    display: inline-block;
+    border: 2px solid black;
+    text-align: center;
+    width: 130px;
+}
+
+.card_cvc_input,
+.card_date_input,
+.card_number_input {
+    display: inline-block;
+}
+
+#sum_positions {
+    margin-left: 118px;
 }

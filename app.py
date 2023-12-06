@@ -4,7 +4,7 @@ import time
 from sqlalchemy import exc,update
 from flask import Flask, render_template, request, flash, redirect, url_for, json, jsonify
 from datetime import datetime
-from datetime import date
+from datetime import date,timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -309,12 +309,25 @@ def basket_():
     print(bsk[0].basket)
     bsk_=bsk[0].basket
     res=json.loads(bsk_)
-    return render_template('basket.html',  print=print,res=res,int=int,Item=Item,str=str,items=items,sum_price=sum_price)
+    return render_template('basket.html',  print=print,res=res,int=int,Item=Item,str=str,items=items,sum_price=sum_price,Users=Users)
 
 @app.route('/pay',methods=['POST', 'GET'])
 def pay():
-    return render_template('payment.html')
+    flag=0
+    a=int(request.form['summ_p'])
+    if(int(request.form['summ_p'])==0):
+        flag=1
+        print('flag=1')
+    return render_template('payment.html',flag=flag,a=a)
 
+@app.route('/success_pay',methods=['POST','GET'])
+def suc_pay():
+    s=request.form['summa']
+    d=date.today()+timedelta(days=15)
+    
+    print(d)
+    
+    return render_template('/suc_pay.html',d=d,s=s)
 
 @app.route('/reg', methods=['POST', 'GET'])
 def reg():

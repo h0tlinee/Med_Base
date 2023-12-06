@@ -18,10 +18,30 @@
     <h1>Оплата товара</h1>
 </div>
 
+
+{%if flag==0%}
 <div class="payment_form">
     <h2>Пожалуйста, введите данные для оплаты</h2>
-    
+    <form action="/success_pay" method="post">
+        <input value={{a}}  name="summa" hidden type="number">
+        <h3 class="card_form_number">Номер карты:</h3>
+        <input type="text" class="card_number_input">
+        <h3 class="card_form_date">Срок действия:</h3>
+        <input type="text" class="card_date_input">
+        <h3 class="card_form_cvc">CVC:</h3>
+        <input type="text" class="card_cvc_input">
+        <h3>Сумма к оплате: {{a}} руб.</h3>
+        <button class="card_form_submit" type="submit">Оплатить заказ</button>
+    </form>
 </div>
+{%else%}
+
+<div class="payment_error_block">
+    <h2>Простите, но в корзине нет товаров!</h2>
+</div>
+{%endif%}
+
+<a href='/to_basket'>Вернуться в корзину</a>
 
 
 
